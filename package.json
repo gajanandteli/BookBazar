@@ -1,0 +1,13 @@
+{
+  "name": "bookbazaar-monorepo",
+  "private": true,
+  "workspaces": ["frontend", "backend"],
+  "scripts": {
+    "dev": "concurrently \"npm --prefix frontend run dev\" \"npm --prefix backend run dev\"",
+    "build": "npm --prefix frontend run build && npm --prefix backend run build",
+    "start": "concurrently \"npm --prefix frontend run start\" \"npm --prefix backend run start\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.1"
+  }
+}

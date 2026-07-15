@@ -1,0 +1,93 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(cuid())
+  name          String
+  email         String   @unique
+  phone         String?  @unique
+  avatar        String?
+  role          String   @default("USER")
+  isVerified    Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  books         Book[]
+  wishlist      Wishlist[]
+  reviews       Review[]
+  messages      Message[]
+  notifications Notification[]
+}
+
+model Book {
+  id             String   @id @default(cuid())
+  title          String
+  author         String
+  edition        String?
+  publication    String?
+  category       String
+  description    String
+  condition      String
+  price          Int
+  originalPrice  Int?
+  negotiable     Boolean  @default(false)
+  location       String
+  city           String
+  state          String
+  pincode        String
+  pickupAvailable Boolean @default(true)
+  deliveryAvailable Boolean @default(true)
+  phoneNumber    String
+  whatsappNumber String
+  images         String[]
+  sellerId       String
+  seller         User     @relation(fields: [sellerId], references: [id])
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  wishlist       Wishlist[]
+  reviews        Review[]
+}
+
+model Wishlist {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  bookId    String
+  book      Book     @relation(fields: [bookId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  rating    Int
+  comment   String
+  bookId    String
+  book      Book     @relation(fields: [bookId], references: [id])
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  content   String
+  room      String
+  senderId  String
+  sender    User     @relation(fields: [senderId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  type      String
+  message   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
