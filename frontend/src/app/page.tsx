@@ -300,17 +300,21 @@ async function toggleWishlist(bookId: string) {
   }`}
 />
 </button>
-                  {book.images ? (
-                    <img
-                      src={book.images}
-                      alt={book.title}
-                      className="w-full aspect-[3/4] object-cover"
-                    />
-                  ) : (
-                    <div className="w-full h-64 bg-gray-200 flex items-center justify-center">
-                      No Image
-                    </div>
-                  )}
+{book.images ? (
+  <img
+    src={
+      book.images.startsWith("http")
+        ? book.images
+        : `${process.env.NEXT_PUBLIC_API_URL}${book.images}`
+    }
+    alt={book.title}
+    className="w-full aspect-[3/4] object-cover"
+  />
+) : (
+  <div className="w-full h-64 bg-gray-200 flex items-center justify-center">
+    No Image
+  </div>
+)}
 
                   <div className="p-4">
 
