@@ -1,82 +1,353 @@
-import Link from 'next/link';
-import { ArrowRight, BookOpen, MapPin, Search, Sparkles, Star } from 'lucide-react';
+"use client";
 
-const featuredBooks = [
-  { title: 'The Alchemist', author: 'Paulo Coelho', price: '₹320', location: 'Delhi' },
-  { title: 'Atomic Habits', author: 'James Clear', price: '₹450', location: 'Mumbai' },
-  { title: 'Clean Code', author: 'Robert C. Martin', price: '₹600', location: 'Bengaluru' },
-];
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { Heart } from "lucide-react"
 
-const categories = ['Engineering', 'Medical', 'School', 'College', 'Programming', 'Novel'];
+interface Book {
+  id: string;
+  title: string;
+  author: string;
+  category: string;
+  price: number;
+  location: string;
+  images: string;
+}
 
-export default function HomePage() {
-  return (
-    <main className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
-      <section className="mx-auto flex max-w-7xl flex-col gap-8 px-6 py-20 lg:flex-row lg:items-center lg:py-28">
-        <div className="max-w-2xl">
-          <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-3 py-1 text-sm font-medium text-blue-600">
-            <Sparkles size={16} /> Modern marketplace for old books
-          </div>
-          <h1 className="text-4xl font-bold tracking-tight text-slate-900 sm:text-6xl">
-            Buy, sell, and discover books near you.
-          </h1>
-          <p className="mt-6 text-lg text-slate-600">
-            BookBazaar helps students, readers, and collectors trade quality used books with instant discovery, chat, and secure listings.
-          </p>
-          <div className="mt-8 flex flex-wrap gap-4">
-            <Link href="/books" className="rounded-full bg-primary px-6 py-3 font-semibold text-white transition hover:bg-blue-700">
-              Explore Books
+export default function Home() {
+  const [books, setBooks] = useState<Book[]>([]);
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [wishlist, setWishlist] = useState<string[]>([]);
+
+  const [search, setSearch] = useState("");
+  const [category, setCategory] = useState("All");
+  const [sort, setSort] = useState("default");
+
+  useEffect(() => {
+    fetchBooks();
+
+    const token = localStorage.getItem("token");
+    if (token) {
+      setLoggedIn(true);
+      fetchWishlist();
+    }
+  }, []);
+  async function fetchWishlist() {
+  const token = localStorage.getItem("token");
+
+  if (!token) return;
+
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/wishlist`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    const data = await res.json();
+
+    setWishlist(data.map((item: any) => item.book.id));
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+  async function fetchBooks() {
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/books`);
+
+      if (!res.ok) {
+        throw new Error("Failed to fetch books");
+      }
+
+      const data = await res.json();
+      setBooks(data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  function handleLogout() {
+    localStorage.removeItem("token");
+    alert("Logout Successful");
+    window.location.reload();
+  }
+async function toggleWishlist(bookId: string) {
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    alert("Please login first");
+    return;
+  }
+
+  try {
+    if (wishlist.includes(bookId)) {
+      // Remove from wishlist
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/wishlist/${bookId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const data = await res.json();
+
+      if (data.success) {
+        setWishlist((prev) => prev.filter((id) => id !== bookId));
+      } else {
+        alert(data.message);
+      }
+    } else {
+      // Add to wishlist
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/wishlist`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ bookId }),
+        }
+      );
+
+      const data = await res.json();
+
+      if (data.success) {
+        setWishlist((prev) => [...prev, bookId]);
+      } else {
+        alert(data.message);
+      }
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+  const filteredBooks = books
+    .filter((book) => {
+      const matchesSearch =
+        book.title.toLowerCase().includes(search.toLowerCase()) ||
+        book.author.toLowerCase().includes(search.toLowerCase());
+
+      const matchesCategory =
+        category === "All" || book.category === category;
+
+      return matchesSearch && matchesCategory;
+    })
+    .sort((a, b) => {
+      if (sort === "low") return a.price - b.price;
+      if (sort === "high") return b.price - a.price;
+      return 0;
+    });
+
+  return (<main className="min-h-screen bg-gray-100">
+
+      {/* Navbar */}
+      <div className="bg-white shadow-md">
+        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row justify-between items-center gap-4 p-5">
+
+          <Link href="/">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold cursor-pointer text-center">
+              📚 BookBazaar
+            </h1>
+          </Link>
+
+          <div className="flex flex-wrap justify-center gap-3 w-full lg:w-auto">
+
+            <Link href="/">
+              <button className="bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-800">
+                Home
+              </button>
             </Link>
-            <Link href="/sell" className="rounded-full border border-slate-300 px-6 py-3 font-semibold text-slate-700 transition hover:border-primary hover:text-primary">
-              Sell a Book
-            </Link>
-          </div>
-        </div>
 
-        <div className="w-full max-w-xl rounded-3xl border border-slate-200 bg-white p-6 shadow-soft">
-          <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-3">
-            <Search className="text-primary" />
-            <input className="w-full bg-transparent outline-none" placeholder="Search by book name, author, category..." />
-          </div>
-          <div className="mt-6 grid gap-3 sm:grid-cols-2">
-            {categories.map((category) => (
-              <div key={category} className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium text-slate-700">
-                {category}
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="mx-auto max-w-7xl px-6 py-10">
-        <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-2xl font-semibold text-slate-900">Featured books</h2>
-          <Link href="/books" className="text-sm font-semibold text-primary">View all</Link>
-        </div>
-        <div className="grid gap-6 md:grid-cols-3">
-          {featuredBooks.map((book) => (
-            <div key={book.title} className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
-              <div className="mb-4 flex h-32 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-100 to-green-100">
-                <BookOpen className="h-10 w-10 text-primary" />
-              </div>
-              <div className="flex items-center gap-1 text-amber-500">
-                {Array.from({ length: 5 }).map((_, index) => (
-                  <Star key={index} size={14} fill="currentColor" />
-                ))}
-              </div>
-              <h3 className="mt-3 text-lg font-semibold text-slate-900">{book.title}</h3>
-              <p className="text-sm text-slate-600">{book.author}</p>
-              <div className="mt-4 flex items-center justify-between text-sm text-slate-600">
-                <span className="font-semibold text-slate-900">{book.price}</span>
-                <span className="flex items-center gap-1"><MapPin size={14} /> {book.location}</span>
-              </div>
-              <Link href="/books" className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-primary">
-                View details <ArrowRight size={16} />
+            {loggedIn && (
+              <Link href="/sell">
+                <button className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+                  Sell Book
+                </button>
               </Link>
-            </div>
-          ))}
+            )}
+            <Link href="/mybooks">
+  <button className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700">
+    My Books
+  </button>
+</Link>
+
+<Link href="/profile">
+  <button className="w-full sm:w-auto bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+    Profile
+  </button>
+</Link>
+<Link href="/wishlist">
+  <button className="w-full sm:w-auto bg-pink-600 text-white px-4 py-2 rounded hover:bg-pink-700">
+    ❤️ Wishlist
+  </button>
+</Link>
+            {loggedIn ? (
+              <button
+                onClick={handleLogout}
+                className="w-full sm:w-auto bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+              >
+                Logout
+              </button>
+            ) : (
+              <>
+                <Link href="/login">
+                  <button className="w-full sm:w-auto bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                    Login
+                  </button>
+                </Link>
+
+                <Link href="/signup">
+                  <button className="w-full sm:w-auto bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+                    Signup
+                  </button>
+                </Link>
+              </>
+            )}
+
+          </div>
         </div>
-      </section>
+      </div>
+
+      {/* Hero */}
+      <div className="text-center py-10">
+        <h2 className="text-5xl font-bold">
+          Buy & Sell Used Books
+        </h2>
+
+        <p className="text-gray-600 mt-3 text-lg">
+          Find affordable books or sell your old books.
+        </p>
+      </div>
+
+      {/* Search + Filter + Sort */}
+      <div className="max-w-7xl mx-auto px-6 mb-8">
+        <div className="flex flex-col md:flex-row gap-4">
+
+          <input
+            type="text"
+            placeholder="🔍 Search by title or author..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="border rounded-lg p-3 flex-1"
+          />
+
+          <select
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            className="border rounded-lg p-3"
+          >
+            <option value="All">All Categories</option>
+            <option value="School">School</option>
+            <option value="College">College</option>
+            <option value="Novel">Novel</option>
+            <option value="Programming">Programming</option>
+            <option value="Competitive">Competitive</option>
+          </select>
+
+          <select
+            value={sort}
+            onChange={(e) => setSort(e.target.value)}
+            className="border rounded-lg p-3"
+          >
+            <option value="default">Sort By</option>
+            <option value="low">Price: Low → High</option>
+            <option value="high">Price: High → Low</option>
+          </select>
+
+        </div>
+      </div>
+
+      {/* Books */}
+      <div className="max-w-7xl mx-auto px-6 pb-10">
+
+        {filteredBooks.length === 0 ? (
+
+          <div className="text-center text-xl text-gray-500 mt-20">
+            No Books Found
+          </div>
+
+        ) : (
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+
+            {filteredBooks.map((book) => (
+
+              <Link key={book.id} href={`/books/${book.id}`}>
+
+                <div className="relative flex flex-col h-full bg-white rounded-xl shadow-md hover:shadow-xl transition duration-300 overflow-hidden cursor-pointer">
+<button
+  onClick={(e) => {
+    e.preventDefault();
+    toggleWishlist(book.id);
+  }}
+  className="absolute top-3 right-3 bg-white p-2 rounded-full shadow hover:bg-red-100 z-10"
+>
+  <Heart
+  fill={wishlist.includes(book.id) ? "currentColor" : "none"}
+  className={`w-5 h-5 ${
+    wishlist.includes(book.id)
+      ? "text-red-500"
+      : "text-gray-400"
+  }`}
+/>
+</button>
+                  {book.images ? (
+                    <img
+                      src={book.images}
+                      alt={book.title}
+                      className="w-full aspect-[3/4] object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-64 bg-gray-200 flex items-center justify-center">
+                      No Image
+                    </div>
+                  )}
+
+                  <div className="p-4">
+
+                    <h2 className="text-xl font-bold">
+                      {book.title}
+                    </h2>
+
+                    <p className="text-gray-600">
+                      {book.author}
+                    </p>
+
+                    <p className="text-gray-500 text-sm">
+                      {book.category}
+                    </p>
+
+                    <p className="text-green-600 font-bold mt-2">
+                      ₹{book.price}
+                    </p>
+
+                    <p className="text-gray-500 text-sm mt-1">
+                      📍 {book.location}
+                    </p>
+
+                  </div>
+
+                </div>
+
+              </Link>
+
+            ))}
+
+          </div>
+
+        )}
+
+      </div>
+
     </main>
   );
 }

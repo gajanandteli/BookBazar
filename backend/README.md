@@ -8,4 +8,4 @@
 5. `npm run seed`
 6. `npm run dev`
 
-The API will be available at http://localhost:5000
+The API will be available at ${process.env.NEXT_PUBLIC_API_URL}

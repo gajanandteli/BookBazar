@@ -29,7 +29,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     environment:
-      NEXT_PUBLIC_API_URL: http://localhost:5000
+      NEXT_PUBLIC_API_URL: ${process.env.NEXT_PUBLIC_API_URL}
     depends_on:
       - backend
     ports:

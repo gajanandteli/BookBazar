@@ -10,7 +10,7 @@ BookBazaar is a modern full-stack marketplace for buying and selling used books.
 ## Quick start
 1. Install dependencies: `npm install`
 2. Start services: `npm run dev`
-3. Open http://localhost:3000 for the app and http://localhost:5000 for the API
+3. Open http://localhost:3000 for the app and ${process.env.NEXT_PUBLIC_API_URL} for the API
 
 ## Project structure
 - frontend/
