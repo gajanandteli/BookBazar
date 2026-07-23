@@ -25,9 +25,9 @@ const httpServer = createServer(app);
 ========================== */
 const io = new Server(httpServer, {
   cors: {
-    origin: ["http://localhost:3000",
-      "http://10.207.43.197:3000"
-    ],methods: ["GET", "POST"]
+    origin: true,
+    methods: ["GET", "POST"],
+    credentials: true,
   }
 });
 /* ==========================
@@ -41,9 +41,7 @@ app.use(
 
 app.use(
   cors({
-    origin: ["http://localhost:3000",
-      "http://10.207.43.197:3000"
-    ],
+    origin: true,
     credentials: true,
   })
 );
