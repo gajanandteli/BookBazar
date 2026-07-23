@@ -109,7 +109,7 @@ router.post(
   async (req: AuthRequest, res) => {
     try {
       console.log("Body:", req.body);
-      console.log("Files:", req.files);
+      console.log("Files:", req.file);
 
       const seller = await prisma.user.findUnique({
         where: {
@@ -134,7 +134,9 @@ router.post(
   phone,
 } = req.body;
 
-const imageUrl = req.file ? `http://10.207.43.197:5000/uploads/${req.file.filename}` : "";
+const imageUrl = req.file
+  ? `${process.env.BASE_URL}/uploads/${req.file.filename}`
+  : "";
       const book = await prisma.book.create({
         data: {
           title: title || "Untitled Book",
@@ -203,9 +205,9 @@ router.put(
           message: "Book not found",
         });
       }
-  const imageUrl = req.file
-  ? `http://10.207.43.197:5000/uploads/${req.file.filename}`
-        : book.images;
+const imageUrl = req.file
+  ? `${process.env.BASE_URL}/uploads/${req.file.filename}`
+  : book.images;
 
       const {
         title,
