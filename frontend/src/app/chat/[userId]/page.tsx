@@ -70,7 +70,7 @@ export default function ChatPage() {
     };
 
     try {
-      await fetch("${process.env.NEXT_PUBLIC_API_URL}/api/messages", {
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/messages`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -4,7 +4,7 @@ import { auth, AuthRequest } from "../middleware/auth";
 
 const router = express.Router();
 const prisma = new PrismaClient();
-router.post("/api/messages", auth, async (req: AuthRequest, res) => {
+router.post("/", auth, async (req: AuthRequest, res) => {
   const { receiverId, text } = req.body;
 
   const message = await prisma.message.create({
@@ -17,7 +17,7 @@ router.post("/api/messages", auth, async (req: AuthRequest, res) => {
 
   res.json(message);
 });
-router.get("/api/messages/:userId", auth, async (req: AuthRequest, res) => {
+router.get("/:userId", auth, async (req: AuthRequest, res) => {
   const otherUserId = String(req.params.userId);
   const messages = await prisma.message.findMany({
     where: {
