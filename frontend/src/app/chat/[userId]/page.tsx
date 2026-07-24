@@ -46,19 +46,31 @@ export default function ChatPage() {
     setMessages(data);
   }
 
-  useEffect(() => {
-    loadProfile();
-    loadMessages();
+useEffect(() => {
+  socket.connect();
 
-    socket.on("receiveMessage", (message) => {
-      setMessages((prev) => [...prev, message]);
-    });
+  loadProfile();
+  loadMessages();
 
-    return () => {
-      socket.off("receiveMessage");
-    };
-  }, []);
+  socket.on("connect", () => {
+    console.log("Socket Connected:", socket.id);
+  });
 
+  socket.on("connect_error", (err) => {
+    console.error("Socket Error:", err);
+  });
+
+  socket.on("receiveMessage", (message) => {
+    setMessages((prev) => [...prev, message]);
+  });
+
+  return () => {
+    socket.off("connect");
+    socket.off("connect_error");
+    socket.off("receiveMessage");
+    socket.disconnect();
+  };
+}, []);
   async function sendMessage() {
     if (!text.trim()) return;
 

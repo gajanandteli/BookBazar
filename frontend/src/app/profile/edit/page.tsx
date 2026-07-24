@@ -23,7 +23,7 @@ export default function EditProfile() {
 
     try {
       const res = await fetch(
-        "${process.env.NEXT_PUBLIC_API_URL}/api/profile",
+        `${process.env.NEXT_PUBLIC_API_URL}/api/profile`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -48,7 +48,7 @@ export default function EditProfile() {
 
     try {
       const res = await fetch(
-        "${process.env.NEXT_PUBLIC_API_URL}/api/profile",
+        `${process.env.NEXT_PUBLIC_API_URL}/api/profile`,
         {
           method: "PUT",
           headers: {

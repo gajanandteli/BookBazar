@@ -13,7 +13,6 @@ export default function SignupPage() {
     password: "",
   });
 const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  console.log(e.target.name, e.target.value);
 
   setForm((prev) => ({
     ...prev,
@@ -22,9 +21,6 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 };
 const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
-
-  console.log(form);
-  alert(JSON.stringify(form));
 
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/api/auth/signup`,

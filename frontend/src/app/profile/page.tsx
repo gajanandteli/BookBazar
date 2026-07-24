@@ -32,7 +32,7 @@ export default function Profile() {
   async function fetchProfile(token: string) {
     try {
       const res = await fetch(
-        "${process.env.NEXT_PUBLIC_API_URL}/api/profile",
+        `${process.env.NEXT_PUBLIC_API_URL}/api/profile`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
