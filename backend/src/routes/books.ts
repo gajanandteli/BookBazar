@@ -135,7 +135,7 @@ router.post(
 } = req.body;
 
 const imageUrl = req.file
-  ? `${process.env.BASE_URL}/uploads/${req.file.filename}`
+  ? (req.file as any).path
   : "";
       const book = await prisma.book.create({
         data: {
@@ -206,7 +206,7 @@ router.put(
         });
       }
 const imageUrl = req.file
-  ? `${process.env.BASE_URL}/uploads/${req.file.filename}`
+  ? (req.file as any).path
   : book.images;
 
       const {
