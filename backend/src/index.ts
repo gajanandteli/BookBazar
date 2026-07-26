@@ -101,6 +101,12 @@ app.get("/health", (_req, res) => {
 app.get("/hello", (_req, res) => {
   res.send("HELLO BOOKBAZAAR");
 });
+app.get("/test-uploads", (_req, res) => {
+  res.json({
+    cwd: process.cwd(),
+    uploadsPath: path.join(process.cwd(), "uploads"),
+  });
+});
 /* ==========================
    SOCKET EVENTS
 ========================== */
