@@ -155,7 +155,7 @@ async function toggleWishlist(bookId: string) {
 
           <Link href="/">
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold cursor-pointer text-center">
-              📚 BookBazaar
+              📚 Libroniq
             </h1>
           </Link>
 

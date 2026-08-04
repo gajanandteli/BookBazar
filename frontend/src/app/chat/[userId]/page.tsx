@@ -117,7 +117,7 @@ useEffect(() => {
       <div className="w-full max-w-3xl h-[90vh] bg-white rounded-xl shadow-lg flex flex-col">
 
         <div className="p-4 border-b">
-          <h2 className="text-xl font-bold">BookBazaar Chat</h2>
+          <h2 className="text-xl font-bold">Libroniq Chat</h2>
         </div>
 
         <div className="flex-1 overflow-y-auto p-4 space-y-3">

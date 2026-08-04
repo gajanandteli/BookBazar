@@ -5,19 +5,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.upload = void 0;
 const multer_1 = __importDefault(require("multer"));
-const path_1 = __importDefault(require("path"));
-const fs_1 = __importDefault(require("fs"));
-const uploadPath = path_1.default.join(process.cwd(), "uploads");
-if (!fs_1.default.existsSync(uploadPath)) {
-    fs_1.default.mkdirSync(uploadPath, { recursive: true });
-}
-const storage = multer_1.default.diskStorage({
-    destination: (_req, _file, cb) => {
-        cb(null, uploadPath);
-    },
-    filename: (_req, file, cb) => {
-        const uniqueName = Date.now() + "-" + Math.round(Math.random() * 1e9);
-        cb(null, uniqueName + path_1.default.extname(file.originalname));
-    },
+const multer_storage_cloudinary_1 = require("multer-storage-cloudinary");
+const cloudinary_1 = __importDefault(require("../config/cloudinary"));
+const storage = new multer_storage_cloudinary_1.CloudinaryStorage({
+    cloudinary: cloudinary_1.default,
+    params: async (_req, file) => ({
+        folder: "Libroniq",
+        resource_type: "image",
+        public_id: `${Date.now()}-${file.originalname.split(".")[0]}`,
+    }),
 });
 exports.upload = (0, multer_1.default)({ storage });

@@ -91,7 +91,7 @@ router.get("/:id", async (req, res) => {
 router.post("/", auth_1.auth, upload_1.upload.single("image"), async (req, res) => {
     try {
         console.log("Body:", req.body);
-        console.log("Files:", req.files);
+        console.log("Files:", req.file);
         const seller = await prisma.user.findUnique({
             where: {
                 id: req.userId,
@@ -104,7 +104,9 @@ router.post("/", auth_1.auth, upload_1.upload.single("image"), async (req, res) 
             });
         }
         const { title, author, category, description, price, location, phone, } = req.body;
-        const imageUrl = req.file ? `http://10.207.43.197:5000/uploads/${req.file.filename}` : "";
+        const imageUrl = req.file
+            ? req.file.path
+            : "";
         const book = await prisma.book.create({
             data: {
                 title: title || "Untitled Book",
@@ -158,7 +160,7 @@ router.put("/:id", auth_1.auth, upload_1.upload.single("image"), async (req, res
             });
         }
         const imageUrl = req.file
-            ? `http://10.207.43.197:5000/uploads/${req.file.filename}`
+            ? req.file.path
             : book.images;
         const { title, author, category, description, price, location, phone, } = req.body;
         const updatedBook = await prisma.book.update({

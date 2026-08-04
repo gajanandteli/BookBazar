@@ -1,6 +1,6 @@
-# BookBazaar
+# Libroniq
 
-BookBazaar is a modern full-stack marketplace for buying and selling used books. The project includes a Next.js frontend, an Express + TypeScript backend, Prisma schema, authentication flows, real-time chat scaffolding, Docker support, and documentation for local development.
+Libroniq is a modern full-stack marketplace for buying and selling used books. The project includes a Next.js frontend, an Express + TypeScript backend, Prisma schema, authentication flows, real-time chat scaffolding, Docker support, and documentation for local development.
 
 ## Tech stack
 - Frontend: Next.js 15, React 19, TypeScript, Tailwind CSS, Framer Motion

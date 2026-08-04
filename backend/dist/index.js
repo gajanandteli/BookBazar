@@ -25,9 +25,9 @@ const httpServer = (0, http_1.createServer)(app);
 ========================== */
 const io = new socket_io_1.Server(httpServer, {
     cors: {
-        origin: ["http://localhost:3000",
-            "http://10.207.43.197:3000"
-        ], methods: ["GET", "POST"]
+        origin: true,
+        methods: ["GET", "POST"],
+        credentials: true,
     }
 });
 /* ==========================
@@ -37,9 +37,7 @@ app.use((0, helmet_1.default)({
     crossOriginResourcePolicy: false,
 }));
 app.use((0, cors_1.default)({
-    origin: ["http://localhost:3000",
-        "http://10.207.43.197:3000"
-    ],
+    origin: true,
     credentials: true,
 }));
 app.use((0, morgan_1.default)("dev"));
@@ -64,7 +62,7 @@ app.use("/uploads", express_1.default.static(path_1.default.join(process.cwd(), 
     etag: false,
     lastModified: false,
     setHeaders: (res) => {
-        res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+        res.setHeader("Access-Control-Allow-Origin", "*");
         res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
     },
 }));
@@ -82,11 +80,17 @@ app.use("/api/messages", messages_1.default);
 app.get("/health", (_req, res) => {
     res.json({
         status: "ok",
-        service: "bookbazaar-backend",
+        service: "Libroniq-backend",
     });
 });
 app.get("/hello", (_req, res) => {
-    res.send("HELLO BOOKBAZAAR");
+    res.send("HELLO Libroniq");
+});
+app.get("/test-uploads", (_req, res) => {
+    res.json({
+        cwd: process.cwd(),
+        uploadsPath: path_1.default.join(process.cwd(), "uploads"),
+    });
 });
 /* ==========================
    SOCKET EVENTS
@@ -127,5 +131,5 @@ app.use((err, _req, res, _next) => {
 ========================== */
 const PORT = Number(process.env.PORT || 5000);
 httpServer.listen(PORT, () => {
-    console.log(`🚀 BookBazaar Backend running on http://localhost:${PORT}`);
+    console.log(`🚀 Libroniq Backend running on http://localhost:${PORT}`);
 });

@@ -3,7 +3,7 @@ import './globals.css';
 import { Toaster } from "react-hot-toast";
 
 export const metadata: Metadata = {
-  title: 'BookBazaar',
+  title: 'Libroniq',
   description: 'A modern marketplace for buying and selling old books',
 };
 

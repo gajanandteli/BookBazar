@@ -1,4 +1,4 @@
-# BookBazaar Backend
+# Libroniq Backend
 
 ## Setup
 1. `cd backend`

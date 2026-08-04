@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
-const SECRET = process.env.JWT_SECRET || "bookbazaar_secret";
+const SECRET = process.env.JWT_SECRET || "Libroniq_secret";
 
 export interface AuthRequest extends Request {
   userId?: string;

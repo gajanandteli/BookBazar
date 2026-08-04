@@ -5,7 +5,7 @@ import cloudinary from "../config/cloudinary";
 const storage = new CloudinaryStorage({
   cloudinary,
   params: async (_req, file) => ({
-    folder: "bookbazaar",
+    folder: "Libroniq",
     resource_type: "image",
     public_id: `${Date.now()}-${file.originalname.split(".")[0]}`,
   }),

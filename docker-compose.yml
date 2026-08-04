@@ -2,11 +2,11 @@ version: "3.9"
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: bookbazaar-postgres
+    container_name: Libroniq-postgres
     environment:
-      POSTGRES_USER: bookbazaar
-      POSTGRES_PASSWORD: bookbazaar
-      POSTGRES_DB: bookbazaar
+      POSTGRES_USER: Libroniq
+      POSTGRES_PASSWORD: Libroniq
+      POSTGRES_DB: Libroniq
     ports:
       - "5432:5432"
     volumes:
@@ -18,7 +18,7 @@ services:
       dockerfile: Dockerfile
     environment:
       PORT: 5000
-      DATABASE_URL: postgresql://bookbazaar:bookbazaar@postgres:5432/bookbazaar?schema=public
+      DATABASE_URL: postgresql://Libroniq:Libroniq@postgres:5432/Libroniq?schema=public
     depends_on:
       - postgres
     ports:

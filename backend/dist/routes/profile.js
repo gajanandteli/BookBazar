@@ -8,7 +8,7 @@ const client_1 = require("@prisma/client");
 const auth_1 = require("../middleware/auth");
 const router = express_1.default.Router();
 const prisma = new client_1.PrismaClient();
-router.get("/api/profile", auth_1.auth, async (req, res) => {
+router.get("/", auth_1.auth, async (req, res) => {
     try {
         const user = await prisma.user.findUnique({
             where: {
@@ -40,7 +40,7 @@ router.get("/api/profile", auth_1.auth, async (req, res) => {
         });
     }
 });
-router.put("/api/profile", auth_1.auth, async (req, res) => {
+router.put("/", auth_1.auth, async (req, res) => {
     try {
         const { name, phone } = req.body;
         const updatedUser = await prisma.user.update({

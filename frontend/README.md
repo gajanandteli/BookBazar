@@ -1,4 +1,4 @@
-# BookBazaar Frontend
+# Libroniq Frontend
 
 ## Setup
 1. `cd frontend`

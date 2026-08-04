@@ -1,5 +1,5 @@
 {
-  "name": "bookbazaar-monorepo",
+  "name": "Libroniq-monorepo",
   "private": true,
   "workspaces": [
     "frontend",

@@ -1,4 +1,4 @@
-# BookBazaar API Documentation
+# Libroniq API Documentation
 
 ## Authentication
 - POST /api/auth/google

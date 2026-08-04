@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 
-const SECRET = process.env.JWT_SECRET || "bookbazaar_secret";
+const SECRET = process.env.JWT_SECRET || "Libroniq_secret";
 
 export const generateToken = (id: string) => {
   return jwt.sign(

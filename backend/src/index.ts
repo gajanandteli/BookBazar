@@ -95,11 +95,11 @@ app.use("/api/messages", messagesRouter);
 app.get("/health", (_req, res) => {
   res.json({
     status: "ok",
-    service: "bookbazaar-backend",
+    service: "Libroniq-backend",
   });
 });
 app.get("/hello", (_req, res) => {
-  res.send("HELLO BOOKBAZAAR");
+  res.send("HELLO Libroniq");
 });
 app.get("/test-uploads", (_req, res) => {
   res.json({
@@ -161,6 +161,6 @@ const PORT = Number(process.env.PORT || 5000);
 
 httpServer.listen(PORT, () => {
   console.log(
-    `🚀 BookBazaar Backend running on http://localhost:${PORT}`
+    `🚀 Libroniq Backend running on http://localhost:${PORT}`
   );
 });
